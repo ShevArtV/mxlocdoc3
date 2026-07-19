@@ -1,0 +1,37 @@
+mxLocDoc Changelog
+==================
+
+2.0.0-pl
+--------
+
+- Port mxLocDoc to MODX Revolution 3. This release targets MODX 3 only; the MODX 2 line stays frozen at 1.0.0-pl.
+- Move the service layer to PSR-4 namespaces under `MxLocDoc\` with composer autoload and a namespace `bootstrap.php` that registers the `mxlocdoc` service in the MODX 3 DI container (`$modx->services`).
+- Update processors to extend `MODX\Revolution\Processors\Processor` and keep the manager controller on `MODX\Revolution\modExtraManagerController`.
+- Replace `$modx->getService()` bootstrapping with the `$modx->services` container across connector, controller, processors and the cache-clear plugin.
+- Vendor Parsedown through composer (`erusev/parsedown`) instead of a bundled copy.
+- Switch the build pipeline from the custom MODX 2 `modxbuilder` to the MODX 3 `modxapp` package builder.
+- Require PHP >= 8.1 and MODX >= 3.0.0.
+
+1.0.0-pl
+--------
+
+- Harden search cache: store the prepared index as a guarded PHP file (`<?php return ...;`) instead of a raw serialized payload, so an exposed cache directory cannot leak documentation text as plain output.
+- Respect front matter `hidden: true` for manifest-listed navigation pages, matching the filesystem fallback contract.
+- Fix search snippet offsets for multibyte (UTF-8) text by using multibyte-aware position and length calculations.
+- Make multilingual mode explicit via the new `mxlocdoc.languages` system setting (comma-separated language codes, `en,ru` by default); an empty value disables language auto-detection so a plain two-letter folder no longer hijacks the docs tree.
+
+0.1.0-pl
+--------
+
+- Initial MODX 2 package release.
+- Add manager documentation viewer with three-column layout, breadcrumbs, collapsible navigation and page table of contents.
+- Add system settings, setting lexicons and runtime option normalization.
+- Add `[[+corePath]]` support and core-relative paths for `mxlocdoc.docs_path`.
+- Add secure filesystem services, document and asset processors.
+- Add navigation builder with `_sidebar.json`/`mxlocdoc.json` manifest support and filesystem fallback.
+- Add safe Markdown renderer with protected relative asset URLs.
+- Add live Markdown search with cached filesystem index in MODX cache.
+- Add manager cache clear plugin for mxLocDoc search cache invalidation.
+- Add multilingual documentation roots and manager language selector.
+- Add publishable English and Russian documentation.
+- Set package license to GNU GPL v2.

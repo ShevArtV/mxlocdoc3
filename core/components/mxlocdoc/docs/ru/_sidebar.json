@@ -1,0 +1,15 @@
+{
+  "title": "mxLocDoc",
+  "items": [
+    {"title": "Обзор", "path": "README.md"},
+    {"title": "Руководство", "path": "guide/README.md", "items": [
+      {"title": "Установка", "path": "guide/setup.md"},
+      {"title": "Настройки", "path": "guide/configuration.md"},
+      {"title": "Навигация", "path": "guide/navigation.md"},
+      {"title": "Синтаксис Markdown", "path": "guide/markdown-syntax.md"},
+      {"title": "Поиск и кэш", "path": "guide/search-cache.md"},
+      {"title": "Языки", "path": "guide/languages.md"},
+      {"title": "Диагностика", "path": "guide/troubleshooting.md"}
+    ]}
+  ]
+}

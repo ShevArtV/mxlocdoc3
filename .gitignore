@@ -1,0 +1,25 @@
+# IDE
+/.idea/
+.vscode/
+
+# Local indexes and agent/runtime state
+/.codegraph/
+/.opencode/
+
+# Logs and OS files
+*.log
+.DS_Store
+
+# Local env/secrets
+.env
+.env.*
+*.key
+
+# MODX package build artifacts
+/core/packages/
+*.transport.zip
+
+# Dependencies/build output if introduced later
+/vendor/
+/node_modules/
+/dist/

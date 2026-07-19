@@ -1,0 +1,15 @@
+{
+  "title": "mxLocDoc",
+  "items": [
+    {"title": "Overview", "path": "README.md"},
+    {"title": "Guide", "path": "guide/README.md", "items": [
+      {"title": "Setup", "path": "guide/setup.md"},
+      {"title": "Configuration", "path": "guide/configuration.md"},
+      {"title": "Navigation", "path": "guide/navigation.md"},
+      {"title": "Markdown syntax", "path": "guide/markdown-syntax.md"},
+      {"title": "Search and cache", "path": "guide/search-cache.md"},
+      {"title": "Languages", "path": "guide/languages.md"},
+      {"title": "Troubleshooting", "path": "guide/troubleshooting.md"}
+    ]}
+  ]
+}
