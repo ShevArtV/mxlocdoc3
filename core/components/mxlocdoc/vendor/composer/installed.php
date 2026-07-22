@@ -3,7 +3,7 @@
         'name' => 'shevartv/mxlocdoc',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '25ec33ad34799f1e100dc39180f5f51b657b41dc',
+        'reference' => '597004374d94198125fe0eef70426a54ea5b7cff',
         'type' => 'modx-extra',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'shevartv/mxlocdoc' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '25ec33ad34799f1e100dc39180f5f51b657b41dc',
+            'reference' => '597004374d94198125fe0eef70426a54ea5b7cff',
             'type' => 'modx-extra',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

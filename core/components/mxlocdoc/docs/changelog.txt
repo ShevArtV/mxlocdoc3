@@ -4,41 +4,41 @@ mxLocDoc Changelog
 2.0.1-pl
 --------
 
-- Support heading anchors in document links: `[text](./doc.md#section)` opens the document and scrolls the panel to the section, `[text](#section)` scrolls within the current document without touching the page hash or the manager viewport. Anchor slugs and heading ids share one implementation, ids are assigned to h1-h6 while the table of contents still lists h1-h3, and an unknown anchor simply opens the document from the top.
-- Document heading anchors and the root-relative image folder (`![x](/assets/file.png)`) in the Markdown syntax guide (en/ru).
-- Restore list markers in the document view: the manager theme loads the Ext JS reset (`ext-all-notheme-min.css`), which drops `list-style` globally, so bulleted and numbered lists rendered without any marker.
+- Добавлено: якоря в ссылках. `[текст](./doc.md#раздел)` открывает документ и прокручивает панель к нужному разделу, `[текст](#раздел)` прокручивает текущий документ, не трогая адрес страницы и не сдвигая саму админку. Слаг якоря и id заголовка считаются одинаково, id проставляются заголовкам с первого по шестой уровень (в оглавление справа по-прежнему идут только первые три), а неизвестный якорь просто открывает документ с начала.
+- Добавлено в документацию: разделы про якоря и про общий каталог картинок в корне документации (`![x](/assets/file.png)`) — в руководстве по синтаксису Markdown, ru и en.
+- Исправлено: в просмотре документа не было видно маркеров у маркированных списков и номеров у нумерованных. ExtJS-ресет админки (`ext-all-notheme-min.css`) гасит `list-style` глобально, поэтому вьюер теперь возвращает маркеры явно — вместе с отступами пунктов и вложенных списков.
 
 2.0.0-pl
 --------
 
-- Port mxLocDoc to MODX Revolution 3. This release targets MODX 3 only; the MODX 2 line stays frozen at 1.0.0-pl.
-- Move the service layer to PSR-4 namespaces under `MxLocDoc\` with composer autoload and a namespace `bootstrap.php` that registers the `mxlocdoc` service in the MODX 3 DI container (`$modx->services`).
-- Update processors to extend `MODX\Revolution\Processors\Processor` and keep the manager controller on `MODX\Revolution\modExtraManagerController`.
-- Replace `$modx->getService()` bootstrapping with the `$modx->services` container across connector, controller, processors and the cache-clear plugin.
-- Vendor Parsedown through composer (`erusev/parsedown`) instead of a bundled copy.
-- Switch the build pipeline from the custom MODX 2 `modxbuilder` to the MODX 3 `modxapp` package builder.
-- Require PHP >= 8.1 and MODX >= 3.0.0.
+- Порт mxLocDoc на MODX Revolution 3. Релиз рассчитан только на MODX 3; линия под MODX 2 остаётся на 1.0.0-pl.
+- Сервисный слой переведён на PSR-4 в пространстве имён `MxLocDoc\` с автозагрузкой composer и `bootstrap.php`, который регистрирует сервис `mxlocdoc` в DI-контейнере MODX 3 (`$modx->services`).
+- Процессоры переведены на `MODX\Revolution\Processors\Processor`, контроллер менеджера остался на `MODX\Revolution\modExtraManagerController`.
+- Инициализация через `$modx->getService()` заменена на контейнер `$modx->services` в коннекторе, контроллере, процессорах и плагине очистки кэша.
+- Parsedown подключается через composer (`erusev/parsedown`) вместо вложенной копии.
+- Сборка переведена с самописного `modxbuilder` для MODX 2 на сборщик пакетов `modxapp` для MODX 3.
+- Требуются PHP >= 8.1 и MODX >= 3.0.0.
 
 1.0.0-pl
 --------
 
-- Harden search cache: store the prepared index as a guarded PHP file (`<?php return ...;`) instead of a raw serialized payload, so an exposed cache directory cannot leak documentation text as plain output.
-- Respect front matter `hidden: true` for manifest-listed navigation pages, matching the filesystem fallback contract.
-- Fix search snippet offsets for multibyte (UTF-8) text by using multibyte-aware position and length calculations.
-- Make multilingual mode explicit via the new `mxlocdoc.languages` system setting (comma-separated language codes, `en,ru` by default); an empty value disables language auto-detection so a plain two-letter folder no longer hijacks the docs tree.
+- Усилен кэш поиска: подготовленный индекс хранится защищённым PHP-файлом (`<?php return ...;`) вместо сырых сериализованных данных, поэтому открытый наружу каталог кэша не отдаст текст документации как обычный вывод.
+- Front matter `hidden: true` теперь учитывается и для страниц, перечисленных в manifest навигации, — так же, как в fallback по файловой системе.
+- Исправлены смещения фрагментов в поиске для многобайтового (UTF-8) текста: позиции и длины считаются с учётом кодировки.
+- Многоязычный режим объявляется явно новой системной настройкой `mxlocdoc.languages` (коды языков через запятую, по умолчанию `en,ru`); пустое значение отключает автоопределение, и обычная двухбуквенная папка больше не перехватывает дерево документации.
 
 0.1.0-pl
 --------
 
-- Initial MODX 2 package release.
-- Add manager documentation viewer with three-column layout, breadcrumbs, collapsible navigation and page table of contents.
-- Add system settings, setting lexicons and runtime option normalization.
-- Add `[[+corePath]]` support and core-relative paths for `mxlocdoc.docs_path`.
-- Add secure filesystem services, document and asset processors.
-- Add navigation builder with `_sidebar.json`/`mxlocdoc.json` manifest support and filesystem fallback.
-- Add safe Markdown renderer with protected relative asset URLs.
-- Add live Markdown search with cached filesystem index in MODX cache.
-- Add manager cache clear plugin for mxLocDoc search cache invalidation.
-- Add multilingual documentation roots and manager language selector.
-- Add publishable English and Russian documentation.
-- Set package license to GNU GPL v2.
+- Первый релиз пакета под MODX 2.
+- Просмотр документации в менеджере: три колонки, хлебные крошки, сворачиваемая навигация и оглавление страницы.
+- Системные настройки, лексиконы настроек и нормализация опций во время выполнения.
+- Поддержка `[[+corePath]]` и путей относительно core для `mxlocdoc.docs_path`.
+- Безопасные сервисы файловой системы, процессоры документов и ассетов.
+- Построитель навигации с поддержкой manifest `_sidebar.json`/`mxlocdoc.json` и fallback по файловой системе.
+- Безопасный рендер Markdown с защищёнными адресами относительных ассетов.
+- Живой поиск по Markdown с кэшированием индекса файловой системы в кэше MODX.
+- Плагин очистки кэша менеджера для сброса поискового кэша mxLocDoc.
+- Многоязычные корни документации и переключатель языка в менеджере.
+- Публикуемая документация на английском и русском.
+- Лицензия пакета — GNU GPL v2.
