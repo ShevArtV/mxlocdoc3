@@ -526,6 +526,40 @@
     padding-left: 24px;
 }
 
+/* Маркеры возвращаем явно: ExtJS-ресет менеджера (ext-all-notheme-min.css)
+   гасит их глобальным `ol,ul{list-style:none}`. */
+.mxlocdoc-article ul {
+    list-style: disc outside;
+}
+
+.mxlocdoc-article ol {
+    list-style: decimal outside;
+}
+
+.mxlocdoc-article ul ul {
+    list-style-type: circle;
+}
+
+.mxlocdoc-article ul ul ul {
+    list-style-type: square;
+}
+
+.mxlocdoc-article li {
+    margin: 0 0 6px;
+}
+
+/* Вложенный список не должен получать 16px от общего правила выше:
+   иначе разрывает пункт, внутри которого лежит. */
+.mxlocdoc-article li > ul,
+.mxlocdoc-article li > ol {
+    margin: 6px 0 0;
+}
+
+/* Пункты «loose»-списка Parsedown оборачивает в <p>. */
+.mxlocdoc-article li > p {
+    margin-bottom: 8px;
+}
+
 .mxlocdoc-article a {
     color: #1d6fa5;
     text-decoration: none;
