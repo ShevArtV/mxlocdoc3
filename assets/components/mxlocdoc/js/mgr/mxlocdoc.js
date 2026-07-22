@@ -38,6 +38,7 @@ Ext.onReady(function () {
         tocList: root.querySelector('[data-mxlocdoc-toc-list]')
     };
     var searchTimer = null;
+    var HEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6';
 
     function request(action, params, callback) {
         var xhr = new XMLHttpRequest();
@@ -352,7 +353,7 @@ Ext.onReady(function () {
         });
     }
 
-    function loadDocument(path, pushHash) {
+    function loadDocument(path, pushHash, anchor) {
         if (!path) {
             return;
         }
@@ -381,6 +382,9 @@ Ext.onReady(function () {
             setState('', '');
             renderDocument(object);
             resetDocumentScroll();
+            if (anchor) {
+                scrollToAnchor(anchor);
+            }
         });
     }
 
@@ -494,19 +498,38 @@ Ext.onReady(function () {
         Array.prototype.forEach.call(links, function (link) {
             link.addEventListener('click', function (event) {
                 event.preventDefault();
-                loadDocument(link.getAttribute('data-mxlocdoc-path'), true);
+                loadDocument(
+                    link.getAttribute('data-mxlocdoc-path'),
+                    true,
+                    link.getAttribute('data-mxlocdoc-anchor')
+                );
+            });
+        });
+
+        // Якоря внутри текущего документа. Ссылки на другие документы рендерер тоже
+        // отдаёт как href="#<path>", поэтому они исключены по data-mxlocdoc-path.
+        var anchors = ui.article.querySelectorAll('a[href^="#"]:not([data-mxlocdoc-path])');
+        Array.prototype.forEach.call(anchors, function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                scrollToAnchor(link.getAttribute('href'));
             });
         });
     }
 
     function prepareHeadings() {
-        var headings = ui.article.querySelectorAll('h1, h2, h3');
+        var headings = ui.article.querySelectorAll(HEADING_SELECTOR);
         var tocHtml = [];
         var seen = {};
 
         Array.prototype.forEach.call(headings, function (heading, index) {
             var id = uniqueHeadingId(heading.id || makeHeadingId(heading.textContent, index), seen);
             heading.id = id;
+            // id нужен всем уровням — на них могут ссылаться якоря; в оглавление
+            // по-прежнему попадают только h1-h3.
+            if (!/^h[123]$/i.test(heading.tagName)) {
+                return;
+            }
             tocHtml.push(
                 '<button type="button" class="mxlocdoc-toc__link mxlocdoc-toc__link--' + heading.tagName.toLowerCase() +
                 '" data-target="' + escapeHtml(id) + '">' + escapeHtml(heading.textContent) + '</button>'
@@ -552,13 +575,58 @@ Ext.onReady(function () {
             ui.documentPanel.scrollTop = 0;
         }
     }
-    function makeHeadingId(text, index) {
-        var slug = String(text || '')
+
+    // Якорь приходит либо из href (DOMDocument percent-кодирует кириллицу при
+    // сохранении HTML), либо из data-mxlocdoc-anchor, где остаётся как есть.
+    function decodeAnchor(anchor) {
+        var value = String(anchor || '').replace(/^#+/, '');
+
+        try {
+            return decodeURIComponent(value);
+        } catch (error) {
+            return value;
+        }
+    }
+
+    function findAnchorTarget(anchor) {
+        var raw = decodeAnchor(anchor);
+        var slug = slugifyHeading(raw);
+        var headings = ui.article.querySelectorAll(HEADING_SELECTOR);
+        var byId = null;
+        var byText = null;
+
+        if (!raw) {
+            return null;
+        }
+
+        Array.prototype.forEach.call(headings, function (heading) {
+            if (byId) {
+                return;
+            }
+            if (heading.id === raw || (slug && heading.id === 'mxlocdoc-heading-' + slug)) {
+                byId = heading;
+                return;
+            }
+            if (!byText && slug && slugifyHeading(heading.textContent) === slug) {
+                byText = heading;
+            }
+        });
+
+        return byId || byText;
+    }
+
+    function scrollToAnchor(anchor) {
+        scrollDocumentTo(findAnchorTarget(anchor));
+    }
+    function slugifyHeading(value) {
+        return String(value || '')
             .toLowerCase()
             .replace(/[^a-z0-9а-яё]+/gi, '-')
             .replace(/^-+|-+$/g, '');
+    }
 
-        return 'mxlocdoc-heading-' + (slug || index);
+    function makeHeadingId(text, index) {
+        return 'mxlocdoc-heading-' + (slugifyHeading(text) || index);
     }
 
     function uniqueHeadingId(id, seen) {

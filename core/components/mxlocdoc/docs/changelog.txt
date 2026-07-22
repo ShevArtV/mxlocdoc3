@@ -1,6 +1,13 @@
 mxLocDoc Changelog
 ==================
 
+2.0.1-pl
+--------
+
+- Support heading anchors in document links: `[text](./doc.md#section)` opens the document and scrolls the panel to the section, `[text](#section)` scrolls within the current document without touching the page hash or the manager viewport. Anchor slugs and heading ids share one implementation, ids are assigned to h1-h6 while the table of contents still lists h1-h3, and an unknown anchor simply opens the document from the top.
+- Document heading anchors and the root-relative image folder (`![x](/assets/file.png)`) in the Markdown syntax guide (en/ru).
+- Restore list markers in the document view: the manager theme loads the Ext JS reset (`ext-all-notheme-min.css`), which drops `list-style` globally, so bulleted and numbered lists rendered without any marker.
+
 2.0.0-pl
 --------
 
